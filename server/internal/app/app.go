@@ -44,7 +44,9 @@ func New(cfg *config.Config) (*App, error) {
 
 	userHandler := handler.NewUserHandler(userService)
 
-	userRouter := router.NewUserRouter(userHandler)
+	userRouter := router.New(router.Handlers{
+		User: userHandler,
+	})
 
 	server := &http.Server{
 		Addr: cfg.HTTPAddr,

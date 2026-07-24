@@ -15,7 +15,7 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-func (r *UserRepository) GetAll(ctx context.Context) ([]model.User, error) {
+func (r *UserRepository) GetAll(ctx context.Context) (*[]model.User, error) {
 	rows, err := r.db.QueryContext(
 		ctx,
 		`SELECT * FROM users`,
@@ -38,5 +38,5 @@ func (r *UserRepository) GetAll(ctx context.Context) ([]model.User, error) {
 		)
 		users = append(users, u)
 	}
-	return users, nil
+	return &users, nil
 }

@@ -6,12 +6,9 @@ import (
 	"github.com/cerque1/tutor-website-001/internal/handler"
 )
 
-func NewUserRouter(user *handler.UserHandler) http.Handler {
-	mux := http.NewServeMux()
-
+func registerUserRouters(mux *http.ServeMux, h *handler.UserHandler) {
 	mux.HandleFunc(
 		"GET /users/all",
-		user.GetAll,
+		h.GetAll,
 	)
-	return mux
 }
