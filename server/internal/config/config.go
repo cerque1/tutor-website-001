@@ -14,11 +14,11 @@ type Config struct {
 
 func Load() *Config {
 	return &Config{
-		PostgresDB: os.Getenv("PostgresDB"),
-		PostgresUser: os.Getenv("PostgresUser"),
-		PostgresPassword: os.Getenv("PostgresPassword"),
-		PostgresHost: os.Getenv("PostgresHost"),
-		PostgresPort: os.Getenv("PostgresPort"),
-		HTTPAddr: os.Getenv("HTTPAddr"),
+		PostgresDB: os.Getenv("POSTGRES_DB"),
+		PostgresUser: os.Getenv("POSTGRES_USER"),
+		PostgresPassword: os.Getenv("POSTGRES_PASSWORD"),
+		PostgresHost: os.Getenv("POSTGRES_HOST"),
+		PostgresPort: os.Getenv("POSTGRES_PORT"),
+		HTTPAddr: os.Getenv("HTTP_ADDR"),
 	}
 }

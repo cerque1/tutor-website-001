@@ -13,10 +13,13 @@ import (
 	"github.com/cerque1/tutor-website-001/internal/config"
 	"github.com/cerque1/tutor-website-001/internal/database"
 	"github.com/cerque1/tutor-website-001/internal/handler"
+	"github.com/cerque1/tutor-website-001/internal/migrator"
 	"github.com/cerque1/tutor-website-001/internal/repository"
 	"github.com/cerque1/tutor-website-001/internal/router"
 	"github.com/cerque1/tutor-website-001/internal/service"
 )
+
+const filePath = "file://migrations"
 
 type App struct {
     Server *http.Server
@@ -25,13 +28,15 @@ type App struct {
 
 func New(cfg *config.Config) (*App, error) {
 	connStr := fmt.Sprintf(
-		"postgres://%s:%s@%s:%s/%s",
+		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		cfg.PostgresUser,
 		cfg.PostgresPassword,
 		cfg.PostgresHost,
 		cfg.PostgresPort,
 		cfg.PostgresDB,
 	)
+
+	migrator.Apply(filePath, connStr)
 
 	db, err := database.New(connStr)
 	if err != nil {
