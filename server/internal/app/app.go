@@ -17,6 +17,9 @@ import (
 	"github.com/cerque1/tutor-website-001/internal/repository"
 	"github.com/cerque1/tutor-website-001/internal/router"
 	"github.com/cerque1/tutor-website-001/internal/service"
+	"github.com/cerque1/tutor-website-001/internal/middleware"
+
+	"github.com/go-playground/validator/v10"
 )
 
 const filePath = "file://migrations"
@@ -43,11 +46,13 @@ func New(cfg *config.Config) (*App, error) {
 		return nil, err
 	}
 
+	var validate = validator.New()
+
 	userRepo := repository.NewUserRepository(db)
 
 	userService := service.NewUserService(userRepo)
 
-	userHandler := handler.NewUserHandler(userService)
+	userHandler := handler.NewUserHandler(userService, validate)
 
 	userRouter := router.New(router.Handlers{
 		User: userHandler,
@@ -55,7 +60,7 @@ func New(cfg *config.Config) (*App, error) {
 
 	server := &http.Server{
 		Addr: cfg.HTTPAddr,
-		Handler: userRouter,
+		Handler: middleware.Recover(userRouter),
 		ReadTimeout: 5 * time.Second,
 		WriteTimeout: 5 * time.Second,
 		IdleTimeout: time.Minute,

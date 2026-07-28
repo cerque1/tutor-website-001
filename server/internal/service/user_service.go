@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/cerque1/tutor-website-001/internal/model"
+	"github.com/cerque1/tutor-website-001/internal/dto"
 )
 
 type UserService struct {
@@ -14,6 +14,22 @@ func NewUserService(repo UserRepository) *UserService {
 	return &UserService{repo: repo}
 }
 
-func (s *UserService) GetAll(ctx context.Context) (*[]model.User, error) {
+func (s *UserService) GetAll(ctx context.Context) (*[]dto.User, error) {
 	return s.repo.GetAll(ctx)
+}
+
+func (s *UserService) Create(ctx context.Context, req dto.UserCreate) (dto.User, error) {
+	return s.repo.Create(ctx, req)
+}
+
+func (s *UserService) Get(ctx context.Context, idx uint64) (dto.User, error) {
+	return s.repo.Get(ctx, idx)
+}
+
+func (s *UserService) Patch(ctx context.Context, idx uint64, req dto.UserPatch) (dto.User, error) {
+	return s.repo.Patch(ctx, idx, req)
+}
+
+func (s *UserService) Delete(ctx context.Context, idx uint64) error {
+	return s.repo.Delete(ctx, idx)
 }
