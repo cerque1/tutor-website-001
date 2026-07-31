@@ -20,7 +20,7 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 func (r *UserRepository) GetAll(ctx context.Context) (*[]dto.User, error) {
 	rows, err := r.db.QueryContext(
 		ctx,
-		`SELECT id, name, is_admin FROM users`,
+		`SELECT id, name, email, is_admin FROM users`,
 	)
 
 	if err != nil {
@@ -35,6 +35,7 @@ func (r *UserRepository) GetAll(ctx context.Context) (*[]dto.User, error) {
 		rows.Scan(
 			&u.ID,
 			&u.Name,
+			&u.Email,
 			&u.IsAdmin,
 		)
 		users = append(users, u)
@@ -48,15 +49,17 @@ func (r *UserRepository) Create(ctx context.Context, req dto.UserCreate) (dto.Us
 	err := r.db.QueryRowContext(
 		ctx,
 		`
-		INSERT INTO users(name, password_hash)
-		VALUES ($1, $2)
-		RETURNING id, name, is_admin
+		INSERT INTO users(name, email, password_hash)
+		VALUES ($1, $2, $3)
+		RETURNING id, name, email, is_admin
 		`,
 		req.Name,
+		req.Email,
 		req.Password,
 	).Scan(
 		&user.ID,
 		&user.Name,
+		&user.Email,
 		&user.IsAdmin,
 	)
 	return user, err
@@ -68,13 +71,34 @@ func (r *UserRepository) Get(ctx context.Context, idx uint64) (dto.User, error) 
 	err := r.db.QueryRowContext(
 		ctx,
 		`
-		SELECT id, name, is_admin FROM users
+		SELECT id, name, email, is_admin FROM users
 		WHERE id=$1
 		`,
 		idx,
 	).Scan(
 		&user.ID,
 		&user.Name,
+		&user.Email,
+		&user.IsAdmin,
+	)
+	return user, err
+}
+
+func (r *UserRepository) GetByEmail(ctx context.Context, email string) (dto.AuthUser, error) {
+	var user dto.AuthUser
+
+	err := r.db.QueryRowContext(
+		ctx,
+		`
+		SELECT id, name, email, password_hash, is_admin FROM users
+		WHERE email=$1
+		`,
+		email,
+	).Scan(
+		&user.ID,
+		&user.Name,
+		&user.Email,
+		&user.PasswordHash,
 		&user.IsAdmin,
 	)
 	return user, err
@@ -98,7 +122,7 @@ func (r *UserRepository) Patch(ctx context.Context, idx uint64, req dto.UserPatc
 	query = strings.TrimSuffix(query, ",")
 
 	query += fmt.Sprintf(
-		" WHERE id=$%d RETURNING id, name, is_admin",
+		" WHERE id=$%d RETURNING id, name, email, is_admin",
 		i,
 	)
 	args = append(args, idx)
@@ -112,6 +136,7 @@ func (r *UserRepository) Patch(ctx context.Context, idx uint64, req dto.UserPatc
 	).Scan(
 		&user.ID,
 		&user.Name,
+		&user.Email,
 		&user.IsAdmin,
 	)
 	return user, err

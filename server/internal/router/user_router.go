@@ -4,31 +4,47 @@ import (
 	"net/http"
 
 	"github.com/cerque1/tutor-website-001/internal/handler"
+	"github.com/cerque1/tutor-website-001/internal/middleware"
 )
 
-func registerUserRouters(mux *http.ServeMux, h *handler.UserHandler) {
-	mux.HandleFunc(
+func registerUserRouters(mux *http.ServeMux, h *handler.UserHandler, secret string) {
+	mux.Handle(
 		"GET /users/all",
-		h.GetAll,
+		middleware.Chain(
+			http.HandlerFunc(h.GetAll),
+			middleware.Auth(secret),
+		),
 	)
 
-	mux.HandleFunc(
+	mux.Handle(
 		"POST /users/",
-		h.Create,
+		middleware.Chain(
+			http.HandlerFunc(h.Create),
+			middleware.Auth(secret),
+		),
 	)
 
-	mux.HandleFunc(
+	mux.Handle(
 		"GET /users/{id}",
-		h.Get,
+		middleware.Chain(
+			http.HandlerFunc(h.Get),
+			middleware.Auth(secret),
+		),
 	)
 
-	mux.HandleFunc(
+	mux.Handle(
 		"PATCH /users/{id}",
-		h.Patch,
+		middleware.Chain(
+			http.HandlerFunc(h.Patch),
+			middleware.Auth(secret),
+		),
 	)
 
-	mux.HandleFunc(
+	mux.Handle(
 		"DELETE /users/{id}",
-		h.Delete,
+		middleware.Chain(
+			http.HandlerFunc(h.Delete),
+			middleware.Auth(secret),
+		),
 	)
 }

@@ -51,16 +51,24 @@ func New(cfg *config.Config) (*App, error) {
 	userRepo := repository.NewUserRepository(db)
 
 	userService := service.NewUserService(userRepo)
+	authService := service.NewAuthService(userRepo, cfg.SecretKey)
 
 	userHandler := handler.NewUserHandler(userService, validate)
+	authHandler := handler.NewAuthHandler(authService, validate)
 
-	userRouter := router.New(router.Handlers{
+	Router := router.New(router.Handlers{
 		User: userHandler,
-	})
+		Auth: authHandler,
+	},
+	cfg.SecretKey,
+	)
 
 	server := &http.Server{
 		Addr: cfg.HTTPAddr,
-		Handler: middleware.Recover(userRouter),
+		Handler: middleware.Chain(
+			Router,
+			middleware.Recover,
+		),
 		ReadTimeout: 5 * time.Second,
 		WriteTimeout: 5 * time.Second,
 		IdleTimeout: time.Minute,

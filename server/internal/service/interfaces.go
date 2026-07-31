@@ -10,6 +10,7 @@ type UserRepository interface {
 	GetAll(ctx context.Context) (*[]dto.User, error)
 	Create(ctx context.Context, req dto.UserCreate) (dto.User, error)
 	Get(ctx context.Context, idx uint64) (dto.User, error)
+	GetByEmail(ctx context.Context, email string) (dto.AuthUser, error)
 	Patch(ctx context.Context, idx uint64, req dto.UserPatch) (dto.User, error)
 	Delete(ctx context.Context, idx uint64) error
 }
