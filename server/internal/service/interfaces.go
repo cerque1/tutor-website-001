@@ -14,3 +14,11 @@ type UserRepository interface {
 	Patch(ctx context.Context, idx uint64, req dto.UserPatch) (dto.User, error)
 	Delete(ctx context.Context, idx uint64) error
 }
+
+type ServiceRepository interface {
+	GetAll(ctx context.Context) (*[]dto.Service, error)
+	Create(ctx context.Context, req dto.ServiceCreate) (dto.Service, error)
+	Get(ctx context.Context, idx uint64) (dto.Service, error)
+	Patch(ctx context.Context, idx uint64, req dto.ServicePatch) (dto.Service, error)
+	Delete(ctx context.Context, idx uint64) error
+}

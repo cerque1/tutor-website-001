@@ -49,16 +49,20 @@ func New(cfg *config.Config) (*App, error) {
 	var validate = validator.New()
 
 	userRepo := repository.NewUserRepository(db)
+	serviceRepo := repository.NewServiceRepository(db)
 
 	userService := service.NewUserService(userRepo)
+	serviceService := service.NewServiceService(serviceRepo)
 	authService := service.NewAuthService(userRepo, cfg.SecretKey)
 
 	userHandler := handler.NewUserHandler(userService, validate)
+	serviceHandler := handler.NewServiceHandler(serviceService, validate)
 	authHandler := handler.NewAuthHandler(authService, validate)
 
 	Router := router.New(router.Handlers{
 		User: userHandler,
 		Auth: authHandler,
+		Service: serviceHandler,
 	},
 	cfg.SecretKey,
 	)
