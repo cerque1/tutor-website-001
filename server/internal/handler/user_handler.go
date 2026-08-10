@@ -25,6 +25,17 @@ func NewUserHandler(
 	}
 }
 
+// GetAll godoc
+// @Summary Получить список пользователей
+// @Description Получить весь список пользователей
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Succsess 200 {array} dto.User
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /users/all [get]
 func (u *UserHandler) GetAll(
 	w http.ResponseWriter,
 	r *http.Request,
@@ -40,6 +51,18 @@ func (u *UserHandler) GetAll(
 	json.NewEncoder(w).Encode(users)
 }
 
+// Create godoc
+// @Summary Создать пользователя
+// @Description Создать нового пользователя
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param request body dto.UserCreate true "Данные пользователя"
+// @Security BearerAuth
+// @Succsess 201 {object} dto.User
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /users [post]
 func (u *UserHandler) Create(
 	w http.ResponseWriter,
 	r *http.Request,
@@ -72,6 +95,17 @@ func (u *UserHandler) Create(
 	}
 }
 
+// Get godoc
+// @Summary Получить пользователя
+// @Description Получает пользователя по id
+// @Tags Users
+// @Produce json
+// @Param id path uint64 true "ID пользователя"
+// @Security BearerAuth
+// @Succsess 200 {object} dto.User
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /users/{id} [get]
 func (u *UserHandler) Get(
 	w http.ResponseWriter,
 	r *http.Request,
@@ -96,6 +130,19 @@ func (u *UserHandler) Get(
 	}
 }
 
+// Patch godoc
+// @Summary Изменить пользователя
+// @Description Частичное изменение данных пользователя
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id path uint64 true "ID пользователя"
+// @Param request body dto.UserPatch true "Данные для изменения"
+// @Security BearerAuth
+// @Succsess 200 {object} dto.User
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /users/{id} [patch]
 func (u *UserHandler) Patch(
 	w http.ResponseWriter,
 	r *http.Request,
@@ -129,6 +176,15 @@ func (u *UserHandler) Patch(
 	json.NewEncoder(w).Encode(user)
 }
 
+// Delete godoc
+// @Summary Удалить пользователя
+// @Tags Users
+// @Param id path uint64 true "id пользователя"
+// @Security BearerAuth
+// @Succsess 204 {string} string
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /users [delete]
 func (u *UserHandler) Delete(
 	w http.ResponseWriter,
 	r *http.Request,

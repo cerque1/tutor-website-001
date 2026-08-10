@@ -24,6 +24,15 @@ func NewAuthHandler(
 	}
 }
 
+// Login godoc
+// @Summary Авторизация полльзователя
+// @Tags Auth
+// @Param request body dto.Login true "Данные аутентификации"
+// @Security BearerAuth
+// @Succsess 200 {object} dto.TokenResponse
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /review/{id} [delete]
 func (a *AuthHandler) Login(
 	w http.ResponseWriter,
 	r *http.Request,

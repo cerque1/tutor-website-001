@@ -25,6 +25,17 @@ func NewServiceHandler(
 	}
 }
 
+// GetAll godoc
+// @Summary Получить список услуг
+// @Description Получить весь список услуг
+// @Tags Services
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Succsess 200 {array} dto.Service
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /services/all [get]
 func (s *ServiceHandler) GetAll(
 	w http.ResponseWriter,
 	r *http.Request,
@@ -39,6 +50,18 @@ func (s *ServiceHandler) GetAll(
 	json.NewEncoder(w).Encode(services)
 }
 
+// Create godoc
+// @Summary Создать услугу
+// @Description Создать новый сервис
+// @Tags Services
+// @Accept json
+// @Produce json
+// @Param request body dto.UserCreate true "Данные услуги"
+// @Security BearerAuth
+// @Succsess 201 {object} dto.Service
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /services [post]
 func (s *ServiceHandler) Create(
 	w http.ResponseWriter,
 	r *http.Request,
@@ -71,6 +94,17 @@ func (s *ServiceHandler) Create(
 	}
 }
 
+// Get godoc
+// @Summary Получить сервис
+// @Description Получает сервис по id
+// @Tags Services
+// @Produce json
+// @Param id path uint64 true "ID сервиса"
+// @Security BearerAuth
+// @Succsess 200 {object} dto.Service
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /services/{id} [get]
 func (s *ServiceHandler) Get(
 	w http.ResponseWriter,
 	r *http.Request,
@@ -97,6 +131,19 @@ func (s *ServiceHandler) Get(
 	}
 }
 
+// Patch godoc
+// @Summary Изменить сервис
+// @Description Частичное изменение данных сервиса
+// @Tags Services
+// @Accept json
+// @Produce json
+// @Param id path uint64 true "ID услуги"
+// @Param request body dto.ServicePatch true "Данные для изменения"
+// @Security BearerAuth
+// @Succsess 200 {object} dto.User
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /services/{id} [patch]
 func (s *ServiceHandler) Patch(
 	w http.ResponseWriter,
 	r *http.Request,
@@ -131,6 +178,15 @@ func (s *ServiceHandler) Patch(
 	}
 }
 
+// Delete godoc
+// @Summary Удалить услугу
+// @Tags Services
+// @Param id path uint64 true "ID услуги"
+// @Security BearerAuth
+// @Succsess 204
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /services/{id} [delete]
 func (s *ServiceHandler) Delete(
 	w http.ResponseWriter,
 	r *http.Request,

@@ -1,4 +1,16 @@
 services:
+  swagger:
+    image: golang:1.25-alpine
+    working_dir: /app
+    volumes:
+      - ./server:/app
+    command: >
+      sh -c "
+        go install github.com/swaggo/swag/cmd/swag@v1.8.1 &&
+        swag init -g cmd/main.go -o docs
+      "
+    profiles:
+      - tools
   server:
     build:
       context: ./server/

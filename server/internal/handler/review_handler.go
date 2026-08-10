@@ -25,6 +25,17 @@ func NewReviewHandler(
 	}
 }
 
+// GetAll godoc
+// @Summary Получить список отзывов
+// @Description Получить весть список отзывов
+// @Tags Reviews
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Succsess 200 {array} dto.Review
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /review/all [get]
 func (h *ReviewHandler) GetAll(
 	w http.ResponseWriter,
 	r *http.Request,
@@ -61,6 +72,18 @@ func (h *ReviewHandler) GetAll(
 	json.NewEncoder(w).Encode(reviews)
 }
 
+// Create godoc
+// @Summary Создать отзыв
+// @Description Создать новый отзыв
+// @Tags Reviews
+// @Accept json
+// @Produce json
+// @Param request body dto.UserCreate true "Данные отзыва"
+// @Security BearerAuth
+// @Succsess 201 {object} dto.Review
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /review [post]
 func (h *ReviewHandler) Create(
 	w http.ResponseWriter,
 	r *http.Request,
@@ -93,6 +116,17 @@ func (h *ReviewHandler) Create(
 	}
 }
 
+// Get godoc
+// @Summary Получить отзыв
+// @Description Получиет отзыв по id
+// @Tags Reviews
+// @Produce json
+// @Param id path uint64 true "ID отзыва"
+// @Security BearerAuth
+// @Succsess 200 {object} dto.Review
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /review/{id} [get]
 func (h *ReviewHandler) Get(
 	w http.ResponseWriter,
 	r *http.Request,
@@ -117,6 +151,15 @@ func (h *ReviewHandler) Get(
 	}
 }
 
+// Delete godoc
+// @Summary Удалить отзыв
+// @Tags Reviews
+// @Param id path uint64 true "id отзыва"
+// @Security BearerAuth
+// @Succsess 204 {string} string
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// Router /review [delete]
 func (h *ReviewHandler) Delete(
 	w http.ResponseWriter,
 	r *http.Request,
