@@ -10,6 +10,7 @@ type Handlers struct {
 	User *handler.UserHandler
 	Auth *handler.AuthHandler
 	Service *handler.ServiceHandler
+	Review *handler.ReviewHandler
 }
 
 func New(h Handlers, secret string) http.Handler {
@@ -18,6 +19,7 @@ func New(h Handlers, secret string) http.Handler {
 	registerUserRouters(mux, h.User, secret)
 	registerServiceRouter(mux, h.Service, secret)
 	registerAuthRouter(mux, h.Auth)
+	registerReviewRouter(mux, h.Review, secret)
 
 	return mux
 }

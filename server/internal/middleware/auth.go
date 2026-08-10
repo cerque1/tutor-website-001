@@ -34,7 +34,7 @@ func Auth(secret string) func(http.Handler) http.Handler {
 			}
 
 			ctx := context.WithValue(r.Context(), UserIDKey, claims.ID)
-			ctx = context.WithValue(r.Context(), IsAdminKey, claims.IsAdmin)
+			ctx = context.WithValue(ctx, IsAdminKey, claims.IsAdmin)
 
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})

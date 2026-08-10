@@ -10,69 +10,90 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type UserHandler struct {
-	service *service.UserService
+type ReviewHandler struct {
+	service  *service.ReviewService
 	validate *validator.Validate
 }
 
-func NewUserHandler(
-	s *service.UserService,
+func NewReviewHandler(
+	s *service.ReviewService,
 	v *validator.Validate,
-) *UserHandler {
-	return &UserHandler{
+) *ReviewHandler {
+	return &ReviewHandler{
 		service: s,
 		validate: v,
 	}
 }
 
-func (u *UserHandler) GetAll(
+func (h *ReviewHandler) GetAll(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
-	users, err := u.service.GetAll(r.Context())
+	query := r.URL.Query()
 
+	limit := 20
+	offset := 0
+
+	if value := query.Get("limit"); value != "" {
+		parsed, err := strconv.Atoi(value)
+		if err != nil || parsed <= 0 {
+			http.Error(w, "invalid limit", http.StatusBadRequest)
+			return
+		}
+		limit = parsed
+	}
+
+	if value := query.Get("offset"); value != "" {
+		parsed, err := strconv.Atoi(value)
+		if err != nil || parsed < 0 {
+			http.Error(w, "invalid offset", http.StatusBadRequest)
+			return
+		}
+		offset = parsed
+	}
+
+	reviews, err := h.service.GetAll(r.Context(), uint64(limit), uint64(offset))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(users)
+	json.NewEncoder(w).Encode(reviews)
 }
 
-func (u *UserHandler) Create(
+func (h *ReviewHandler) Create(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
 
-	var req dto.UserCreate
+	var req dto.ReviewCreate
 
 	if err := decoder.Decode(&req); err != nil {
 		http.Error(w, "invalid json", http.StatusBadRequest)
 		return
 	}
-	if err := u.validate.Struct(req); err != nil {
+	if err := h.validate.Struct(req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	user, err := u.service.Create(r.Context(), req)
+	review, err := h.service.Create(r.Context(), req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 
-	if err := json.NewEncoder(w).Encode(user); err != nil {
+	if err := json.NewEncoder(w).Encode(review); err != nil {
 		http.Error(w, "failed to encode responce", http.StatusInternalServerError)
 	}
 }
 
-func (u *UserHandler) Get(
+func (h *ReviewHandler) Get(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
@@ -82,7 +103,7 @@ func (u *UserHandler) Get(
 		return
 	}
 
-	user, err := u.service.Get(r.Context(), idx)
+	review, err := h.service.Get(r.Context(), idx)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -91,45 +112,12 @@ func (u *UserHandler) Get(
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
 
-	if err := json.NewEncoder(w).Encode(user); err != nil {
+	if err := json.NewEncoder(w).Encode(review); err != nil {
 		http.Error(w, "failed to encode responce", http.StatusInternalServerError)
 	}
 }
 
-func (u *UserHandler) Patch(
-	w http.ResponseWriter,
-	r *http.Request,
-) {
-	idx, err :=	strconv.ParseUint(r.PathValue("id"), 10, 64)
-	if err != nil {
-		http.Error(w, "invalid id", http.StatusBadRequest)
-		return
-	}
-
-	decoder := json.NewDecoder(r.Body)
-	decoder.DisallowUnknownFields()
-
-	var req dto.UserPatch
-
-	if err := decoder.Decode(&req); err != nil {
-		http.Error(w, "invalid json", http.StatusBadRequest)
-		return
-	}
-	if err := u.validate.Struct(req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	user, err := u.service.Patch(r.Context(), idx, req)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
-}
-
-func (u *UserHandler) Delete(
+func (h *ReviewHandler) Delete(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
@@ -139,7 +127,7 @@ func (u *UserHandler) Delete(
 		return
 	}
 
-	err = u.service.Delete(r.Context(), idx)
+	err = h.service.Delete(r.Context(), idx)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

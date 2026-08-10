@@ -22,3 +22,10 @@ type ServiceRepository interface {
 	Patch(ctx context.Context, idx uint64, req dto.ServicePatch) (dto.Service, error)
 	Delete(ctx context.Context, idx uint64) error
 }
+
+type ReviewRepository interface {
+	GetAll(ctx context.Context, limit uint64, offset uint64) (*[]dto.Review, error)
+	Create(ctx context.Context, req dto.ReviewCreate, userId uint64) (dto.Review, error)
+	Get(ctx context.Context, idx uint64) (dto.Review, error)
+	Delete(ctx context.Context, idx uint64) error
+}
