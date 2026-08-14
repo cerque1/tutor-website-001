@@ -1,0 +1,413 @@
+basePath: /
+definitions:
+  dto.Login:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    type: object
+  dto.ServicePatch:
+    properties:
+      description:
+        maxLength: 2000
+        minLength: 10
+        type: string
+      price:
+        type: number
+      title:
+        maxLength: 100
+        minLength: 3
+        type: string
+    type: object
+  dto.UserCreate:
+    properties:
+      email:
+        type: string
+      name:
+        maxLength: 50
+        minLength: 3
+        type: string
+      password:
+        maxLength: 72
+        minLength: 8
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  dto.UserPatch:
+    properties:
+      name:
+        maxLength: 50
+        minLength: 3
+        type: string
+      password:
+        maxLength: 72
+        minLength: 8
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Tutor API
+  version: "1.0"
+paths:
+  /review:
+    post:
+      consumes:
+      - application/json
+      description: Создать новый отзыв
+      parameters:
+      - description: Данные отзыва
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserCreate'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Создать отзыв
+      tags:
+      - Reviews
+  /review/{id}:
+    delete:
+      parameters:
+      - description: Данные аутентификации
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Login'
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Авторизация полльзователя
+      tags:
+      - Auth
+    get:
+      description: Получиет отзыв по id
+      parameters:
+      - description: ID отзыва
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить отзыв
+      tags:
+      - Reviews
+  /review/all:
+    get:
+      consumes:
+      - application/json
+      description: Получить весть список отзывов
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить список отзывов
+      tags:
+      - Reviews
+  /services:
+    post:
+      consumes:
+      - application/json
+      description: Создать новый сервис
+      parameters:
+      - description: Данные услуги
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserCreate'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Создать услугу
+      tags:
+      - Services
+  /services/{id}:
+    delete:
+      parameters:
+      - description: ID услуги
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить услугу
+      tags:
+      - Services
+    get:
+      description: Получает сервис по id
+      parameters:
+      - description: ID сервиса
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить сервис
+      tags:
+      - Services
+    patch:
+      consumes:
+      - application/json
+      description: Частичное изменение данных сервиса
+      parameters:
+      - description: ID услуги
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Данные для изменения
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ServicePatch'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Изменить сервис
+      tags:
+      - Services
+  /services/all:
+    get:
+      consumes:
+      - application/json
+      description: Получить весь список услуг
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить список услуг
+      tags:
+      - Services
+  /users:
+    delete:
+      parameters:
+      - description: id пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить пользователя
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Создать нового пользователя
+      parameters:
+      - description: Данные пользователя
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserCreate'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Создать пользователя
+      tags:
+      - Users
+  /users/{id}:
+    get:
+      description: Получает пользователя по id
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить пользователя
+      tags:
+      - Users
+    patch:
+      consumes:
+      - application/json
+      description: Частичное изменение данных пользователя
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Данные для изменения
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserPatch'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Изменить пользователя
+      tags:
+      - Users
+  /users/all:
+    get:
+      consumes:
+      - application/json
+      description: Получить весь список пользователей
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить список пользователей
+      tags:
+      - Users
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

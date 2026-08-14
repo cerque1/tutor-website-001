@@ -1,0 +1,47 @@
+services:
+  swagger:
+    image: golang:1.25-alpine
+    working_dir: /app
+    volumes:
+      - ./server:/app
+    command: >
+      sh -c "
+        go install github.com/swaggo/swag/cmd/swag@v1.8.1 &&
+        swag init -g cmd/main.go -o docs
+      "
+    profiles:
+      - tools
+  server:
+    build:
+      context: ./server/
+      dockerfile: Dockerfile
+    container_name: server
+    env_file:
+      - .env
+    ports:
+    - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+  
+  postgres:
+    image: postgres:17
+    container_name: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    command: ["postgres", "-c", "port=${POSTGRES_PORT}"]
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  postgres_data:
