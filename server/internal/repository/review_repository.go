@@ -15,7 +15,11 @@ func NewReviewRepository(db *sql.DB) *ReviewRepository {
 	return &ReviewRepository{db: db}
 }
 
-func (r *ReviewRepository) GetAll(ctx context.Context, limit uint64, offset uint64) (*[]dto.Review, error) {
+func (r *ReviewRepository) GetAll(
+	ctx context.Context,
+	limit uint64,
+	offset uint64,
+) (*[]dto.Review, error) {
 	rows, err := r.db.QueryContext(
 		ctx,
 		`
@@ -45,7 +49,11 @@ func (r *ReviewRepository) GetAll(ctx context.Context, limit uint64, offset uint
 	return &reviews, nil
 }
 
-func (r *ReviewRepository) Create(ctx context.Context, req dto.ReviewCreate, userId uint64) (dto.Review, error) {
+func (r *ReviewRepository) Create(
+	ctx context.Context,
+	req dto.ReviewCreate,
+	userId uint64,
+) (dto.Review, error) {
 	var review dto.Review
 
 	err := r.db.QueryRowContext(
@@ -67,7 +75,10 @@ func (r *ReviewRepository) Create(ctx context.Context, req dto.ReviewCreate, use
 	return review, err
 }
 
-func (r *ReviewRepository) Get(ctx context.Context, idx uint64) (dto.Review, error) {
+func (r *ReviewRepository) Get(
+	ctx context.Context,
+	idx uint64,
+) (dto.Review, error) {
 	var review dto.Review
 
 	err := r.db.QueryRowContext(
@@ -86,7 +97,10 @@ func (r *ReviewRepository) Get(ctx context.Context, idx uint64) (dto.Review, err
 	return review, err
 }
 
-func (r *ReviewRepository) Delete(ctx context.Context, idx uint64) error {
+func (r *ReviewRepository) Delete(
+	ctx context.Context,
+	idx uint64,
+) error {
 	result, err := r.db.ExecContext(
 		ctx,
 		`

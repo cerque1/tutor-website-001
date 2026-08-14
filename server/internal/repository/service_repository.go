@@ -17,7 +17,9 @@ func NewServiceRepository(db *sql.DB) *ServiceRepository {
 	return &ServiceRepository{db: db}
 }
 
-func (r *ServiceRepository) GetAll(ctx context.Context) (*[]dto.Service, error) {
+func (r *ServiceRepository) GetAll(
+	ctx context.Context,
+) (*[]dto.Service, error) {
 	rows, err := r.db.QueryContext(
 		ctx,
 		"SELECT id, title, description, price FROM services",
@@ -43,7 +45,10 @@ func (r *ServiceRepository) GetAll(ctx context.Context) (*[]dto.Service, error) 
 	return &services, nil
 }
 
-func (r *ServiceRepository) Create(ctx context.Context, req dto.ServiceCreate) (dto.Service, error) {
+func (r *ServiceRepository) Create(
+	ctx context.Context,
+	req dto.ServiceCreate,
+) (dto.Service, error) {
 	var serv dto.Service
 
 	err := r.db.QueryRowContext(
@@ -65,7 +70,10 @@ func (r *ServiceRepository) Create(ctx context.Context, req dto.ServiceCreate) (
 	return serv, err
 }
 
-func (r *ServiceRepository) Get(ctx context.Context, idx uint64) (dto.Service, error) {
+func (r *ServiceRepository) Get(
+	ctx context.Context,
+	idx uint64,
+) (dto.Service, error) {
 	var serv dto.Service
 
 	err := r.db.QueryRowContext(
@@ -84,7 +92,11 @@ func (r *ServiceRepository) Get(ctx context.Context, idx uint64) (dto.Service, e
 	return serv, err
 }
 
-func (r *ServiceRepository) Patch(ctx context.Context, idx uint64, req dto.ServicePatch) (dto.Service, error) {
+func (r *ServiceRepository) Patch(
+	ctx context.Context,
+	idx uint64,
+	req dto.ServicePatch,
+) (dto.Service, error) {
 	query := "UPDATE services SET "
 	args := []any{}
 	i := 1
@@ -128,7 +140,10 @@ func (r *ServiceRepository) Patch(ctx context.Context, idx uint64, req dto.Servi
 	return serv, err
 }
 
-func (r *ServiceRepository) Delete(ctx context.Context, idx uint64) error {
+func (r *ServiceRepository) Delete(
+	ctx context.Context,
+	idx uint64,
+) error {
 	result, err := r.db.ExecContext(
 		ctx,
 		`

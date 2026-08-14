@@ -17,7 +17,9 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-func (r *UserRepository) GetAll(ctx context.Context) (*[]dto.User, error) {
+func (r *UserRepository) GetAll(
+	ctx context.Context,
+) (*[]dto.User, error) {
 	rows, err := r.db.QueryContext(
 		ctx,
 		`SELECT id, name, email, is_admin FROM users`,
@@ -43,7 +45,10 @@ func (r *UserRepository) GetAll(ctx context.Context) (*[]dto.User, error) {
 	return &users, nil
 }
 
-func (r *UserRepository) Create(ctx context.Context, req dto.UserCreate) (dto.User, error) {
+func (r *UserRepository) Create(
+	ctx context.Context,
+	req dto.UserCreate,
+) (dto.User, error) {
 	var user dto.User
 
 	err := r.db.QueryRowContext(
@@ -65,7 +70,10 @@ func (r *UserRepository) Create(ctx context.Context, req dto.UserCreate) (dto.Us
 	return user, err
 }
 
-func (r *UserRepository) Get(ctx context.Context, idx uint64) (dto.User, error) {
+func (r *UserRepository) Get(
+	ctx context.Context,
+	idx uint64,
+) (dto.User, error) {
 	var user dto.User
 
 	err := r.db.QueryRowContext(
@@ -84,7 +92,10 @@ func (r *UserRepository) Get(ctx context.Context, idx uint64) (dto.User, error) 
 	return user, err
 }
 
-func (r *UserRepository) GetByEmail(ctx context.Context, email string) (dto.AuthUser, error) {
+func (r *UserRepository) GetByEmail(
+	ctx context.Context,
+	email string,
+) (dto.AuthUser, error) {
 	var user dto.AuthUser
 
 	err := r.db.QueryRowContext(
@@ -104,7 +115,11 @@ func (r *UserRepository) GetByEmail(ctx context.Context, email string) (dto.Auth
 	return user, err
 }
 
-func (r *UserRepository) Patch(ctx context.Context, idx uint64, req dto.UserPatch) (dto.User, error) {
+func (r *UserRepository) Patch(
+	ctx context.Context,
+	idx uint64,
+	req dto.UserPatch,
+) (dto.User, error) {
 	query := "UPDATE users SET "
 	args := []any{}
 	i := 1
@@ -142,7 +157,10 @@ func (r *UserRepository) Patch(ctx context.Context, idx uint64, req dto.UserPatc
 	return user, err
 }
 
-func (r *UserRepository) Delete(ctx context.Context, idx uint64) error {
+func (r *UserRepository) Delete(
+	ctx context.Context,
+	idx uint64,
+) error {
 	result, err := r.db.ExecContext(
 		ctx,
 		`

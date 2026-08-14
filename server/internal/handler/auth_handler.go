@@ -33,7 +33,7 @@ func NewAuthHandler(
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /review/{id} [delete]
-func (a *AuthHandler) Login(
+func (h *AuthHandler) Login(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
@@ -46,12 +46,12 @@ func (a *AuthHandler) Login(
 		http.Error(w, "invalid json", http.StatusBadRequest)
 		return
 	}
-	if err := a.validate.Struct(req); err != nil {
+	if err := h.validate.Struct(req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	tokenStr, err := a.service.Login(r.Context(), req)
+	tokenStr, err := h.service.Login(r.Context(), req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

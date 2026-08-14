@@ -36,11 +36,11 @@ func NewServiceHandler(
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /services/all [get]
-func (s *ServiceHandler) GetAll(
+func (h *ServiceHandler) GetAll(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
-	services, err := s.service.GetAll(r.Context())
+	services, err := h.service.GetAll(r.Context())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -62,7 +62,7 @@ func (s *ServiceHandler) GetAll(
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /services [post]
-func (s *ServiceHandler) Create(
+func (h *ServiceHandler) Create(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
@@ -75,12 +75,12 @@ func (s *ServiceHandler) Create(
 		http.Error(w, "invalid json", http.StatusBadRequest)
 		return
 	}
-	if err := s.validate.Struct(req); err != nil {
+	if err := h.validate.Struct(req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	serv, err := s.service.Create(r.Context(), req)
+	serv, err := h.service.Create(r.Context(), req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -105,7 +105,7 @@ func (s *ServiceHandler) Create(
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /services/{id} [get]
-func (s *ServiceHandler) Get(
+func (h *ServiceHandler) Get(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
@@ -116,7 +116,7 @@ func (s *ServiceHandler) Get(
 		return
 	}
 
-	serv, err := s.service.Get(r.Context(), idx)
+	serv, err := h.service.Get(r.Context(), idx)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -144,7 +144,7 @@ func (s *ServiceHandler) Get(
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /services/{id} [patch]
-func (s *ServiceHandler) Patch(
+func (h *ServiceHandler) Patch(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
@@ -164,7 +164,7 @@ func (s *ServiceHandler) Patch(
 		return
 	}
 
-	serv, err := s.service.Patch(r.Context(), idx, req)
+	serv, err := h.service.Patch(r.Context(), idx, req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -187,7 +187,7 @@ func (s *ServiceHandler) Patch(
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /services/{id} [delete]
-func (s *ServiceHandler) Delete(
+func (h *ServiceHandler) Delete(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
@@ -197,7 +197,7 @@ func (s *ServiceHandler) Delete(
 		return
 	}
 
-	err = s.service.Delete(r.Context(), idx)
+	err = h.service.Delete(r.Context(), idx)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

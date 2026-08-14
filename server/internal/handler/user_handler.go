@@ -36,11 +36,11 @@ func NewUserHandler(
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /users/all [get]
-func (u *UserHandler) GetAll(
+func (h *UserHandler) GetAll(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
-	users, err := u.service.GetAll(r.Context())
+	users, err := h.service.GetAll(r.Context())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -63,7 +63,7 @@ func (u *UserHandler) GetAll(
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /users [post]
-func (u *UserHandler) Create(
+func (h *UserHandler) Create(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
@@ -76,12 +76,12 @@ func (u *UserHandler) Create(
 		http.Error(w, "invalid json", http.StatusBadRequest)
 		return
 	}
-	if err := u.validate.Struct(req); err != nil {
+	if err := h.validate.Struct(req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	user, err := u.service.Create(r.Context(), req)
+	user, err := h.service.Create(r.Context(), req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -106,7 +106,7 @@ func (u *UserHandler) Create(
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /users/{id} [get]
-func (u *UserHandler) Get(
+func (h *UserHandler) Get(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
@@ -116,7 +116,7 @@ func (u *UserHandler) Get(
 		return
 	}
 
-	user, err := u.service.Get(r.Context(), idx)
+	user, err := h.service.Get(r.Context(), idx)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -143,7 +143,7 @@ func (u *UserHandler) Get(
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /users/{id} [patch]
-func (u *UserHandler) Patch(
+func (h *UserHandler) Patch(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
@@ -162,12 +162,12 @@ func (u *UserHandler) Patch(
 		http.Error(w, "invalid json", http.StatusBadRequest)
 		return
 	}
-	if err := u.validate.Struct(req); err != nil {
+	if err := h.validate.Struct(req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	user, err := u.service.Patch(r.Context(), idx, req)
+	user, err := h.service.Patch(r.Context(), idx, req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -185,7 +185,7 @@ func (u *UserHandler) Patch(
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /users [delete]
-func (u *UserHandler) Delete(
+func (h *UserHandler) Delete(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
@@ -195,7 +195,7 @@ func (u *UserHandler) Delete(
 		return
 	}
 
-	err = u.service.Delete(r.Context(), idx)
+	err = h.service.Delete(r.Context(), idx)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

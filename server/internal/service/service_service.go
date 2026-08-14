@@ -26,7 +26,11 @@ func (s *ServiceService) Get(ctx context.Context, idx uint64) (dto.Service, erro
 	return s.repo.Get(ctx, idx)
 }
 
-func (s *ServiceService) Patch(ctx context.Context, idx uint64, req dto.ServicePatch) (dto.Service, error) {
+func (s *ServiceService) Patch(
+	ctx context.Context,
+	idx uint64,
+	req dto.ServicePatch,
+) (dto.Service, error) {
 	return s.repo.Patch(ctx, idx, req)
 }
 

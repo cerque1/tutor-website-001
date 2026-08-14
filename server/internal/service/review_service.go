@@ -16,7 +16,11 @@ func NewReviewService(repo ReviewRepository) *ReviewService {
 	return &ReviewService{repo: repo}
 }
 
-func (s *ReviewService) GetAll(ctx context.Context, limit uint64, offset uint64) (*[]dto.Review, error) {
+func (s *ReviewService) GetAll(
+	ctx context.Context,
+	limit uint64,
+	offset uint64,
+) (*[]dto.Review, error) {
 	return s.repo.GetAll(ctx, limit, offset)
 }
 
